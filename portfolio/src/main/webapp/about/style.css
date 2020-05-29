@@ -1,0 +1,29 @@
+#content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 650px;
+}
+
+#greeting-container {
+  margin: 20px 0px 50px;
+  color: white;
+}
+
+body {
+    background-color: #1B1B1B;
+}
+
+/* Text styles */
+h1 {
+  color: aqua;  
+}
+p {
+  color: white;
+}
+
+
+/* Rescaling image */
+img {
+  max-width:50%;
+  height:auto;
+}
