@@ -10,7 +10,6 @@ body {
 
 /* Styling and positioning intro text */
 @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
-
 header > h1 {
   width: 650px;
   position: absolute;
@@ -35,6 +34,7 @@ img {
   transform: translate(-50%, -30%);
   margin: auto;
 }
+
 /* Individual button */
 .button {
   text-align: center;
@@ -42,17 +42,19 @@ img {
   display: inline-block;
   
 }
+
 /* Button Image */
 .button figure {
   margin: 0px 0px 15px;
 }
+
 /* Button Text */
 .button .text {
   display: inline-block;
   font: 200% 'Source Code Pro', monospace;
   text-transform: uppercase;
   color: #9FFEA3;
+
   margin: 0 0 15px;
 }
 
-/* Maybe adding animation later on */
