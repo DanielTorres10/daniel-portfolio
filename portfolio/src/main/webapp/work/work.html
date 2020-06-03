@@ -8,14 +8,74 @@
   <body>
     <div id="content">
       <!-- NAVBAR -->
-      <figure><img src="../images/work.png"/></figure>
+      <figure><img src="../images/work.png"  class="prof-img"/></figure>
       <div class ="nav-bar">
-        <a href="../about/about.html"><div class="text">About</strong></div></a>
-        <a href="#"><div class="text"><strong>Work</strong></div></a>
-        <a href="../resume/resume.html"><div class="text">Resume</div></a>
+        <a href="../about/about.html"><div class="nav-text">About</strong></div></a>
+        <a href="../work/work.html"><div class="nav-text"><strong>Work</strong></div></a>
+        <a href="../resume/resume.html"><div class="nav-text">Resume</div></a>
       </div>
-        <!-- NAVBAR END -->
+      <!-- NAVBAR END -->
+      <h1 style="color: #94DEFE;">Projects</h1>
     </div>
-    
+    <!-- Projects Grid -->
+    <div class="cards">
+
+      <div class="card">
+        <!-- Title -->
+        <h1 class="card-h1">Machine Learning</h1>
+        <!-- Image -->
+        <div id="center"><img src="images/kaggle.png" class="card-img"/></div>
+        <!-- Description -->
+        <h1 class="card-h2">Kaggle: "What's cooking?" Competition</h1>
+        <p style="font-size: 100%;">Given a list of ingredient and recipe id in JSON format, 
+          I worked with a teammate to develop a model that predicts the type of cuisine of given ingredients.
+          <br>Competition link: https://www.kaggle.com/c/whats-cooking/data
+          <br>Developed in Python
+        </p>
+      </div>
+
+      <div class="card">
+        <!-- Title -->
+        <h1 class="card-h1">Game Development</h1>
+        <!-- Image -->
+        <div id="center"><img src="images/magika.png" class="card-img" style="max-width: 75%;"/></div>
+        <!-- Description -->
+        <h1 class="card-h2">Advanced Programming course: "2D Magika" game</h1>
+        <p style="font-size: 100%;"> One of my first projects where I had to design, animate and 
+          implement various features to a 2D game.
+          <br>Developed in Java
+        </p>
+      </div>
+
+      <div class="card">
+        <!-- Title -->
+        <h1 class="card-h1">Image Processing</h1>
+        <!-- Image -->
+        <div id="center"><img src="images/img.png" class="card-img" style="border: 3px solid  #9FFEA2;"/></div>
+        <!-- Description -->
+        <h1 class="card-h2">Programming Language course: Median Filter noise reductor</h1>
+        <p style="font-size: 100%;"> A median filter was implemented to remove noise from an image. 
+          A client would process any arbitrary image and submit this to two servers.
+          One server processes the image with a serial implementation, while the second server processes it using scala parallel collections. 
+          <br>Developed in Scala 
+        </p>
+      </div>
+
+      <div class="card">
+        <!-- Title -->
+        <h1 class="card-h1">UX Design and Research</h1>
+        <!-- Image -->
+        <div id="center"><img src="images/app.png" style="max-width: 30%;  border: 3px solid  black;"/></div>
+        <!-- Description -->
+        <h1 class="card-h2">Recipe/Restaurant App Design and Research</h1>
+        <p style="font-size: 100%;"> Worked in a team of four to interview people with dietary restrictions and ideated different solutions to
+          design an interface for an app. Designed a platform in which it would find restaurants and recipes based on their profile.
+          <br>Designed in Figma
+        </p>
+      </div>
+
+      <!-- TODO: Add more cards -->
+    </div>
+    <!-- Projects Grid END-->
   </body>
 </html>

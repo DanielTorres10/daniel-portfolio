@@ -3,6 +3,13 @@
   margin-right: auto;
   width: 650px;
 }
+#info {
+  margin-left: auto;
+  margin-right: auto;
+  width:70%;
+  padding: 10px;
+  margin-bottom: 30px;
+}
 #greeting-container {
   margin: 20px 0px 50px;
   color: white;
@@ -15,10 +22,9 @@ body {
 .nav-bar {
   position: relative;
   text-align: center;
-  margin: auto;
 }
-.nav-bar .text {
-  margin:50px 50px 50px 50px;
+.nav-bar .nav-text {
+  margin:30px 50px 50px 50px;
   text-decoration: none;
   color: #9FFEA2;
   font: 170% 'Source Code Pro', monospace; 
@@ -29,15 +35,16 @@ figure {
   height: 20vh;
   width: 15vh;
   position: absolute; 
-  margin-top: 30px;
+  margin-top: 18px;
   margin-left: 650px;
 }
 
 /* Text styles */
 h1 {
+  color: #FFE297;
   font: 250% 'Source Code Pro', monospace; 
-  color: #94DEFE;
   text-align: center;
+  font-weight: bold;
 }
 p {
   color: white;
@@ -45,9 +52,20 @@ p {
   text-align: center;
   line-height: 2;
 }
+.nav-text {
+  color: white;
+  font: 140% 'Source Code Pro', monospace; 
+  line-height: 2;
+  list-style: none;
+}
+
+.text {
+  color: #94DEFE;
+  font-weight: bold;
+}
 
 /* Rescaling image */
-img {
+.prof-img {
   border-radius: 100%;
   max-width:50%;
   height:auto;
@@ -56,8 +74,45 @@ img {
   text-align: center;
 }
 
-/* Resume container */
+/* Resume page container */
 .container {
   text-align: center;
   padding: 30px;
+  margin-bottom: 30px;
+}
+
+/* Projects page Grid box.
+ Design inspired by https://getflywheel.com/layout/card-layout-css-grid-layout-how-to/ */
+.cards {
+  margin: 0px auto 30px;
+  max-width: 70%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-auto-rows: auto;
+  grid-gap: 1rem;
+}
+.card {
+  max-width: 100%;
+  border: 2px solid #e7e7e7;
+  border-radius: 4px;
+  padding: .5rem;
+}
+.card-img {
+  text-align: center ;
+  border: 3px solid  #FF8484;
+  border-radius: 20%;
+}
+
+.card-h1 {
+  color: #94DEFE;
+  font: 130% 'Source Code Pro', monospace; 
+  text-align: center;
+  font-weight: bold;
+}
+
+.card-h2 {
+  color: #FFE297;
+  font: 120% 'Source Code Pro', monospace; 
+  text-align: center;
+  font-weight: bold;
 }
