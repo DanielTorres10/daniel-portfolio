@@ -20,23 +20,32 @@ body {
 
 /* Nav Bar */
 .nav-bar {
-  position: relative;
   text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 .nav-bar .nav-text {
-  margin:30px 50px 50px 50px;
+  margin:10px 30px 10px 38px;
+  margin-left: auto;
+  margin-right: auto;
   text-decoration: none;
   color: #9FFEA2;
   font: 170% 'Source Code Pro', monospace; 
   display: inline-block;
   text-transform: uppercase;
 }
-figure {
-  height: 20vh;
-  width: 15vh;
-  position: absolute; 
-  margin-top: 18px;
-  margin-left: 650px;
+
+.text-box {
+  padding-left: 35px;
+  text-align: center;
+  padding-right: 35px;
+}
+.nav-bar .nav-icon {
+  display: inline-block;
+  width: 50px;
+  position: absolute;
+  top: 1%;
+  transform: translate(55%, 1%);
 }
 
 /* Text styles */
@@ -48,7 +57,7 @@ h1 {
 }
 p {
   color: white;
-  font: 150% 'Source Code Pro', monospace; 
+  font: 140% 'Source Code Pro', monospace; 
   text-align: center;
   line-height: 2;
 }
@@ -64,16 +73,29 @@ p {
   font-weight: bold;
 }
 
+
 /* Rescaling image */
 .prof-img {
   border-radius: 100%;
-  max-width:50%;
+  width:260px;
+}
+.icon-img {
+  position: relative;
+  border-radius: 100%;
+  width:50px;
   height:auto;
+}
+
+#img-container {
+  text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
 }
 #center {
   text-align: center;
 }
-
 /* Resume page container */
 .container {
   text-align: center;
