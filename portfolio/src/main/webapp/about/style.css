@@ -80,6 +80,7 @@ p {
   width:260px;
 }
 .icon-img {
+  padding: 20px;
   position: relative;
   border-radius: 100%;
   width:50px;
