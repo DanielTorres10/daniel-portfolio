@@ -53,15 +53,41 @@ function addQuoteToDom(quote) {
 /* Other short method */
 function getHelloUsingArrowFunctions() {
   fetch('/data').then(response => response.text()).then((quote) => {
-    document.getElementById('server-container').innerText = quote;
-  });
+  const helloPElement = document.getElementById('server-container');
+  helloPElement.innerHTML = '';
+  helloPElement.appendChild(
+        createPElement(createListElement(quote.message1)));
+  helloPElement.appendChild(
+        createPElement(createListElement(quote.message2)));
+  helloPElement.appendChild(
+        createPElement(createListElement(quote.message3)));
+});
 }
 /* Other short method (better?) */
 async function getHelloUsingAsyncAwait() {
   console.log('Fetching message...')
   const response = await fetch('/data');
+
   console.log('Handling the response.');
   const quote = await response.text();
+
   console.log('Adding quote to dom: ' + quote);
-  document.getElementById('server-container').innerText = quote;
+  const helloPElement = document.getElementById('server-container');
+  helloPElement.innerHTML = '';
+  helloPElement.appendChild(
+      createPElement(quote));
+ }
+
+
+/* Creates an <p> element containing text. */
+function createPElement(text) {
+  const pElement = document.createElement('p');
+  pElement.innerText = text;
+  return pElement;
+}
+/* Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
