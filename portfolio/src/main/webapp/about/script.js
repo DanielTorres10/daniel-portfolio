@@ -28,50 +28,25 @@
 // }
 
 /**
-* week-2 Step 2:
+* week-2 Step 3:
 */
 
-/* Fetch promise */
-function getHello(){
-  console.log('Fetching message...')
-  const promise = fetch('/data');
-  promise.then(handlePromise);
-} 
-/* Get promise content */
-function handlePromise(response) {
-  console.log('Handling the response.');
-  const textPromise = response.text();
-  textPromise.then(addQuoteToDom);
-}
-/* Add the content to html */
-function addQuoteToDom(quote) {
-  console.log('Adding quote to dom: ' + quote);
-  const quoteContainer = document.getElementById('server-container');
-  quoteContainer.innerText = quote;
-}
-
-/* Other short method */
+/* Get JSON from server */
 function getHelloUsingArrowFunctions() {
   fetch('/data').then(response => response.text()).then((quote) => {
   const helloPElement = document.getElementById('server-container');
+  console.log('Adding JSON: ' + quote);
   helloPElement.innerHTML = '';
   helloPElement.appendChild(
-        createPElement(createListElement(quote.message1)));
-  helloPElement.appendChild(
-        createPElement(createListElement(quote.message2)));
-  helloPElement.appendChild(
-        createPElement(createListElement(quote.message3)));
+      createPElement(quote));
 });
 }
-/* Other short method (better?) */
+/* Alternative method */
 async function getHelloUsingAsyncAwait() {
-  console.log('Fetching message...')
   const response = await fetch('/data');
-
-  console.log('Handling the response.');
   const quote = await response.text();
 
-  console.log('Adding quote to dom: ' + quote);
+  console.log('Adding JSON: ' + quote);
   const helloPElement = document.getElementById('server-container');
   helloPElement.innerHTML = '';
   helloPElement.appendChild(
