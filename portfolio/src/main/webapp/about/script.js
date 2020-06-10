@@ -12,42 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// /**
-//  * Adds a random greeting to the page.
-//  */
-// function addRandomGreeting() {
-//   const greetings =
-//       ['Born and raised in Puerto Rico!', 'Father of four dogs', 'Favorite Movie: Inception', 'Can play percussion.'];
-
-//   // Pick a random greeting.
-//   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-//   // Add it to the page.
-//   const greetingContainer = document.getElementById('greeting-container');
-//   greetingContainer.innerText = greeting;
-// }
-
 /**
 * week-2 Step 3:
 */
 
-/* Get JSON from server */
-function getHelloUsingArrowFunctions() {
-  fetch('/data').then(response => response.text()).then((quote) => {
-  const helloPElement = document.getElementById('server-container');
-  console.log('Adding JSON: ' + quote);
-  helloPElement.innerHTML = '';
-  helloPElement.appendChild(
-      createPElement(quote));
-});
-}
 /* Alternative method */
-async function getHelloUsingAsyncAwait() {
+async function getCommentUsingAsyncAwait() {
   const response = await fetch('/data');
   const quote = await response.text();
 
   console.log('Adding JSON: ' + quote);
-  const helloPElement = document.getElementById('server-container');
+  const helloPElement = document.getElementById('history');
   helloPElement.innerHTML = '';
   helloPElement.appendChild(
       createPElement(quote));

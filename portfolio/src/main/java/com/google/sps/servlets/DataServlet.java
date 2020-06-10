@@ -26,35 +26,40 @@ import com.google.gson.Gson;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+  // Comments ArrayList
+  private ArrayList<String> comments = new ArrayList<>();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Adding messages to ArrayList
-    ArrayList<String> messages = new ArrayList<>(Arrays.asList("L do you know", "Gods of death", "loves apples."));
-    String json = convertToJson(messages);
-      // Send the JSON as the response
+    // Send the JSON as the response
     response.setContentType("application/json;");
+    String json = convertToJsonUsingGson(comments);
     response.getWriter().println(json);
   }
 
-   /**
-   * Converts a ArrayList into a JSON string using manual String concatentation.
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String text = getComment(request, "text-input");
+    comments.add(text);
+    // Redirect back to the HTML page.
+    response.sendRedirect("../about/about.html");
+  }
+
+  /**
+   * @return the request parameter, or the default value if the parameter
+   *         was not specified by the client
    */
-  private String convertToJson(ArrayList<String> messages) {
-    String json = "{";
-    json += "\"message1\": ";
-    json += "\"" + messages.get(0) + "\"";
-    json += ", ";
-    json += "\"message2\": ";
-    json +=  "\"" + messages.get(1) + "\"";
-    json += ", ";
-    json += "\"message3\": ";
-    json +=  "\"" + messages.get(2) + "\"";
-    json += "}";
-    return json;
+  private String getComment(HttpServletRequest request, String name) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      System.err.println("Comment can't be null");
+    }
+    return value;
   }
 
      /**
-   * Other method to convert to Json
+   * Method to convert to Json
    */
    private String convertToJsonUsingGson(ArrayList<String> messages) {
     Gson gson = new Gson();
