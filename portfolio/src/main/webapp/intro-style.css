@@ -1,0 +1,60 @@
+
+*{
+ width: fit-content;
+}
+
+body {
+  padding: 40px;
+  background-color: #1B1B1B;
+}
+
+/* Styling and positioning intro text */
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
+header > h1 {
+  width: 650px;
+  position: absolute;
+  font: 350% 'Source Code Pro', monospace; 
+  color: #94DEFE;
+  text-align: center;
+  left: 50%;
+  top: 28%;
+  transform: translate(-50%, -30%);
+}
+
+/* Rescaling images */
+img {
+  max-width: 60%;
+}
+
+/* Buttons Group */
+.btn-group {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  transform: translate(-50%, -30%);
+  margin: auto;
+}
+
+/* Individual button */
+.button {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  
+}
+
+/* Button Image */
+.button figure {
+  margin: 0px 0px 15px;
+}
+
+/* Button Text */
+.button .text {
+  display: inline-block;
+  font: 200% 'Source Code Pro', monospace;
+  text-transform: uppercase;
+  color: #9FFEA3;
+
+  margin: 0 0 15px;
+}
+
