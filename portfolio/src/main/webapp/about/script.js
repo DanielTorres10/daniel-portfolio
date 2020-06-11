@@ -13,31 +13,29 @@
 // limitations under the License.
 
 /**
-* week-2 Step 3:
+* week-2 Step 5:
 */
 
-/* Alternative method */
-async function getCommentUsingAsyncAwait() {
-  const response = await fetch('/data');
-  const quote = await response.text();
-
-  console.log('Adding JSON: ' + quote);
-  const helloPElement = document.getElementById('history');
-  helloPElement.innerHTML = '';
-  helloPElement.appendChild(
-      createPElement(quote));
- }
-
-
-/* Creates an <p> element containing text. */
-function createPElement(text) {
-  const pElement = document.createElement('p');
-  pElement.innerText = text;
-  return pElement;
+/* Loading comments from server and displaying them */
+function loadComments() {
+  fetch('/data').then(response => response.json()).then((comments) => {
+  const commentElement = document.getElementById('history');
+  comments.forEach((comment) => {
+     console.log('Loading comment: ' + comment);
+    commentElement.appendChild(createCommentElement(comment));
+    })
+  });
 }
-/* Creates an <li> element containing text. */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+
+
+/** Creates an element that represents a comment */
+function createCommentElement(comment) {
+  const commentElement = document.createElement('li');
+  commentElement.className = 'comment';
+
+  const PElement = document.createElement('p');
+  PElement.innerText = comment.text;
+
+  commentElement.appendChild(PElement);
+  return commentElement;
 }
