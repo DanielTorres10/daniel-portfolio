@@ -33,8 +33,6 @@ import com.google.gson.Gson;
 /** Servlet that handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  // Comments ArrayList
-  private ArrayList<String> comments = new ArrayList<>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
