@@ -14,6 +14,9 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +44,14 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
     String text = getComment(request, "text-input");
+    long timestamp = System.currentTimeMillis();
     comments.add(text);
+    Entity comEntity = new Entity("Comment");
+    comEntity.setProperty("text-input", text);
+    comEntity.setProperty("timestamp", timestamp);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(comEntity);
     // Redirect back to the HTML page.
     response.sendRedirect("../about/about.html");
   }
@@ -52,7 +62,7 @@ public class DataServlet extends HttpServlet {
    */
   private String getComment(HttpServletRequest request, String name) {
     String value = request.getParameter(name);
-    if (value == null) {
+    if (value == null || value == "") {
       System.err.println("Comment can't be null");
     }
     return value;
