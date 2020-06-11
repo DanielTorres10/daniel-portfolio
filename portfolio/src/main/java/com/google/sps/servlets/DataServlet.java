@@ -33,6 +33,8 @@ import com.google.gson.Gson;
 /** Servlet that handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+  // Comments ArrayList
+  private ArrayList<String> comments = new ArrayList<>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,9 +79,10 @@ public class DataServlet extends HttpServlet {
   /**
    * @return the request parameter
    */
+
   private String getComment(HttpServletRequest request, String name) {
     String value = request.getParameter(name);
-    if (value == null || value.isEmpty()) {
+    if (value == null || value == "") {
       System.err.println("Comment can't be null");
     }
     return value;
