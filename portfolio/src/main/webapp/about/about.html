@@ -31,8 +31,8 @@
         <!-- Comment Section -->
         <form action="/data" method="POST">
           <p>Enter a comment:</p>
-          <textarea name="text-input"></textarea>
-          <input type="submit" id="com_btn"  onsubmit="verifyComment()"/>
+          <textarea name="text-input" id="text-input" required></textarea>
+          <input type="submit" onClick='return empty()'/>
         </form>
         <ul id="history"></ul>
         <!-- Social Logos -->

@@ -63,25 +63,22 @@ public class DataServlet extends HttpServlet {
     String text = getComment(request, "text-input");
     long timestamp = System.currentTimeMillis();
 
-    if (text.isBlank()) {
-      System.err.println("Comment can't be null");
-    } else {
-      // Create new Entity for Datastore
-      Entity comEntity = new Entity("Comment");
-      comEntity.setProperty("text-input", text);
-      comEntity.setProperty("timestamp", timestamp);
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      datastore.put(comEntity);
-    }
+    // Create new Entity for Datastore
+    Entity comEntity = new Entity("Comment");
+    comEntity.setProperty("text-input", text);
+    comEntity.setProperty("timestamp", timestamp);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(comEntity);
+
     // Redirect back to the HTML page.
     response.sendRedirect("../about/about.html");
   }
 
 
-  /* @return the request parameter */
+  /* @return the request parameter and trims whitespace */
   private String getComment(HttpServletRequest request, String name) {
     String value = request.getParameter(name);
-    return value;
+    return value.trim();
   }
 
    /* Method to convert to Json */

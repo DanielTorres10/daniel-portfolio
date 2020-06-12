@@ -41,11 +41,13 @@ function createCommentElement(comment) {
 }
 
 
-/* Ignores empty comments */
-function verifyComment(){
-  var comment = document.getElementById('text-input').textContent;
-  if (comment === null || comment.isBlank()){
-    alert("Comment can't be empty.");
+/* Ignores empty or whitespace comments. */
+ function empty() {
+  var text;
+  text = document.getElementById("text-input").value.trim();
+  if (text.length === 0) {
+    alert('Unvalid comment.');
     return false;
-  } 
+  }
 }
+
