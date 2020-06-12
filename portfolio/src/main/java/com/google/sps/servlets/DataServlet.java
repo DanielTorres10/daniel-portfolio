@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import com.google.gson.Gson;
 
-/** Servlet that handle comments data */
+/* Servlet that handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
@@ -50,12 +50,12 @@ public class DataServlet extends HttpServlet {
 
       comments.add(new Comment(id, text, timestamp));
     }
-
     // Converts to JSON and responds
     response.setContentType("application/json;");
     String json = convertToJsonUsingGson(comments);
     response.getWriter().println(json);
   }
+
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -63,32 +63,28 @@ public class DataServlet extends HttpServlet {
     String text = getComment(request, "text-input");
     long timestamp = System.currentTimeMillis();
 
-    // Create new Entity for Datastore
-    Entity comEntity = new Entity("Comment");
-    comEntity.setProperty("text-input", text);
-    comEntity.setProperty("timestamp", timestamp);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(comEntity);
-
+    if (text.isBlank()) {
+      System.err.println("Comment can't be null");
+    } else {
+      // Create new Entity for Datastore
+      Entity comEntity = new Entity("Comment");
+      comEntity.setProperty("text-input", text);
+      comEntity.setProperty("timestamp", timestamp);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(comEntity);
+    }
     // Redirect back to the HTML page.
     response.sendRedirect("../about/about.html");
   }
 
-  /**
-   * @return the request parameter
-   */
 
+  /* @return the request parameter */
   private String getComment(HttpServletRequest request, String name) {
     String value = request.getParameter(name);
-    if (value == null || value == "") {
-      System.err.println("Comment can't be null");
-    }
     return value;
   }
 
-     /**
-   * Method to convert to Json
-   */
+   /* Method to convert to Json */
    private String convertToJsonUsingGson(ArrayList<Comment> messages) {
     Gson gson = new Gson();
     String json = gson.toJson(messages);

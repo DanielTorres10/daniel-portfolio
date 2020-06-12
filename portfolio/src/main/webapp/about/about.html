@@ -26,12 +26,13 @@
         <li><div class="text">Education:</div> University of Puerto Rico Mayaguez, Google Tech Exchange Program</li>
         <li><div class="text">Associations:</div> Computing Alliance of Hispanic-Serving Institute (CAHSI) </li>
       </ul>
-
+      
       <div id="center">
+        <!-- Comment Section -->
         <form action="/data" method="POST">
           <p>Enter a comment:</p>
           <textarea name="text-input"></textarea>
-          <input type="submit" />
+          <input type="submit" id="com_btn"  onsubmit="verifyComment()"/>
         </form>
         <ul id="history"></ul>
         <!-- Social Logos -->

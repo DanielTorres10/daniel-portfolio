@@ -28,7 +28,7 @@ function loadComments() {
 }
 
 
-/** Creates an element that represents a comment */
+/* Creates an element that represents a comment */
 function createCommentElement(comment) {
   const commentElement = document.createElement('li');
   commentElement.className = 'comment';
@@ -38,4 +38,14 @@ function createCommentElement(comment) {
 
   commentElement.appendChild(PElement);
   return commentElement;
+}
+
+
+/* Ignores empty comments */
+function verifyComment(){
+  var comment = document.getElementById('text-input').textContent;
+  if (comment === null || comment.isBlank()){
+    alert("Comment can't be empty.");
+    return false;
+  } 
 }
