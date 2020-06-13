@@ -51,3 +51,14 @@ function createCommentElement(comment) {
   }
 }
 
+var clicks = 0;
+function displayComments(){
+  clicks +=1;
+  var comment = document.getElementById('history');
+  if (comment.style.display === "none" || clicks == 1) {
+    comment.style.display = "block";
+  } else {
+    comment.style.display = "none";
+  }
+}
+

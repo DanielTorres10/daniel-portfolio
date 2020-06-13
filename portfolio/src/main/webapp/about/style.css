@@ -51,19 +51,19 @@ body {
 /* Text styles */
 h1 {
   color: #FFE297;
-  font: 250% 'Source Code Pro', monospace; 
+  font: 200% 'Source Code Pro', monospace; 
   text-align: center;
   font-weight: bold;
 }
 p {
   color: white;
-  font: 140% 'Source Code Pro', monospace; 
+  font: 1.1em 'Source Code Pro', monospace; 
   text-align: center;
   line-height: 2;
 }
 .nav-text {
   color: white;
-  font: 140% 'Source Code Pro', monospace; 
+  font: 1.1em 'Source Code Pro', monospace; 
   line-height: 2;
   list-style: none;
 }
@@ -139,3 +139,62 @@ p {
   text-align: center;
   font-weight: bold;
 }
+
+.comment-input {
+  width: 60%;
+  height: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #1B1B1B;
+  font: 1.2em/1.8em;
+  color: white;
+  overflow: hidden;
+  resize: none;
+}
+
+ul {
+  list-style: none;
+}
+#history {
+  display: none;
+}
+
+li.comment {
+  background: #1c1c1c;
+  border-radius: 0 0.5rem 0.5rem 0.5rem;
+  margin-top: 1rem;
+  min-height: 3rem;
+  padding: 1rem 1rem 1rem 3rem;
+  position: relative;
+  border-bottom: 1px solid #FF8484;
+}
+
+button {
+  color: #fff;
+  text-transform: uppercase;
+  background: #434343; 
+  padding: 8px;
+  border-radius: 5px;
+}
+
+#sub {
+  margin-bottom: 35px;
+}
+
+.accordion {
+  background-color: #1c1c1c;
+  cursor: pointer;
+  padding: 18px;
+  width: 70%;
+  text-align: center;
+  color: #FF8484;
+  font: 130% 'Source Code Pro', monospace; 
+  border: none;
+  outline: none;
+  transition: 0.4s;
+}
+.active, .accordion:hover {
+  background-color: rgb(63, 63, 63);
+}
+
+

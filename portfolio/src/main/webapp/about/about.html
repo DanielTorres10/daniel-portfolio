@@ -30,15 +30,19 @@
       <div id="center">
         <!-- Comment Section -->
         <form action="/data" method="POST">
-          <p>Enter a comment:</p>
-          <textarea name="text-input" id="text-input" required></textarea>
-          <input type="submit" onClick='return empty()'/>
+          <p>Share your thoughts about me:</p>
+          <textarea class="comment-input" name="text-input" id="text-input" required></textarea>
+          <br>
+          <button id="sub" type="submit" onClick='return empty()'>COMMENT</button>
         </form>
+        <button class="accordion" onclick="displayComments()">Display comments</button>
         <ul id="history"></ul>
+       </div>
+       <div id="center">
         <!-- Social Logos -->
         <a href="https://github.com/DanielTorres10"><img src="images/git2.png"  class="icon-img"/></a>
         <a href="https://linkedin.com/in/daniel-e-torres-945427134"><img src="images/li.png"  class="icon-img"/></a>
-      </div>
+       </div>
     </div>
   </body>
 </html>
