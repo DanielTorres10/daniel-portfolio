@@ -1,6 +1,6 @@
 package com.google.sps.data;
 
-/** A comment on the comment section. */
+/** A comment on the comment section */
 public final class Comment {
 
   private final long id;

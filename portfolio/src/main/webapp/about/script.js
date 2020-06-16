@@ -41,7 +41,7 @@ function createCommentElement(comment) {
 }
 
 
-/* Ignores empty or whitespace comments. */
+/* Ignores empty or whitespace comments */
  function empty() {
   var text;
   text = document.getElementById("text-input").value.trim();

@@ -29,6 +29,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import com.google.gson.Gson;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 
 /* Servlet that handle comments data */
 @WebServlet("/data")
@@ -52,14 +55,14 @@ public class DataServlet extends HttpServlet {
     }
     // Converts to JSON and responds
     response.setContentType("application/json;");
-    String json = convertToJsonUsingGson(comments);
+    String json = convertToJson(comments);
     response.getWriter().println(json);
   }
 
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form in html page.
+    // Get the input from the form in html page
     String text = getComment(request, "text-input");
     long timestamp = System.currentTimeMillis();
 
@@ -69,6 +72,16 @@ public class DataServlet extends HttpServlet {
     comEntity.setProperty("timestamp", timestamp);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(comEntity);
+
+    // Sentiment analizer for comments
+    Document doc =
+    Document.newBuilder().setContent(text).setType(Document.Type.PLAIN_TEXT).build();
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    float score = sentiment.getScore();
+    languageService.close();
+    System.out.println("New Comment: " + text);
+    System.out.println("Sentiment analysis score: " + score );
 
     // Redirect back to the HTML page.
     response.sendRedirect("../about/about.html");
@@ -81,8 +94,8 @@ public class DataServlet extends HttpServlet {
     return value.trim();
   }
 
-   /* Method to convert to Json */
-   private String convertToJsonUsingGson(ArrayList<Comment> messages) {
+   /* Method to convert text comments to Json */
+   private String convertToJson(ArrayList<Comment> messages) {
     Gson gson = new Gson();
     String json = gson.toJson(messages);
     return json;
