@@ -6,10 +6,12 @@ public final class Comment {
   private final long id;
   private final String text;
   private final long timestamp;
+  private final double sentiment_score;
 
-  public Comment(long id, String text, long timestamp) {
+  public Comment(long id, String text, long timestamp, double sentiment_score) {
     this.id = id;
     this.text = text;
     this.timestamp = timestamp;
+    this.sentiment_score = sentiment_score;
   }
 }

@@ -50,8 +50,9 @@ public class DataServlet extends HttpServlet {
       long id = entity.getKey().getId();
       String text = (String) entity.getProperty("text-input");
       long timestamp = (long) entity.getProperty("timestamp");
+      double score = (double) entity.getProperty("sentiment_score");
 
-      comments.add(new Comment(id, text, timestamp));
+      comments.add(new Comment(id, text, timestamp, score));
     }
     // Converts to JSON and responds
     response.setContentType("application/json;");
@@ -70,8 +71,7 @@ public class DataServlet extends HttpServlet {
     Entity comEntity = new Entity("Comment");
     comEntity.setProperty("text-input", text);
     comEntity.setProperty("timestamp", timestamp);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(comEntity);
+
 
     // Sentiment analizer for comments
     Document doc =
@@ -80,9 +80,12 @@ public class DataServlet extends HttpServlet {
     Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
     float score = sentiment.getScore();
     languageService.close();
-    System.out.println("New Comment: " + text);
-    System.out.println("Sentiment analysis score: " + score );
 
+    comEntity.setProperty("sentiment_score", score);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(comEntity);
+    
     // Redirect back to the HTML page.
     response.sendRedirect("../about/about.html");
   }

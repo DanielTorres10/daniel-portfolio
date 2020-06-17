@@ -21,7 +21,7 @@ body {
 /* Nav Bar */
 .nav-bar {
   text-align: center;
-  margin-left: auto;
+  margin-left: -2%;
   margin-right: auto;
 }
 .nav-bar .nav-text {
@@ -80,11 +80,9 @@ p {
   width:260px;
 }
 .icon-img {
-  padding: 20px;
-  position: relative;
-  border-radius: 100%;
-  width:50px;
-  height:auto;
+  padding-top: 10px;
+  width: 50px;
+  height: auto;
 }
 
 #img-container {
@@ -197,4 +195,6 @@ button {
   background-color: rgb(63, 63, 63);
 }
 
-
+li.nav {
+    display: inline;
+}

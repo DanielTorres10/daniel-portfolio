@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
-* week-2 Step 5:
-*/
-
 /* Loading comments from server and displaying them */
-function loadComments() {
-  fetch('/data').then(response => response.json()).then((comments) => {
+async function loadComments() {
+  const response = await fetch('/data');
+  const comments = await response.json();
   const commentElement = document.getElementById('history');
   comments.forEach((comment) => {
-     console.log('Loading comment: ' + comment);
     commentElement.appendChild(createCommentElement(comment));
-    })
-  });
+    if (comment.sentiment_score < 0) console.log('Negative comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
+    else if(comment.sentiment_score > 0) console.log('Positive comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
+    else console.log('Neutral comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
+  })
 }
-
 
 /* Creates an element that represents a comment */
 function createCommentElement(comment) {
