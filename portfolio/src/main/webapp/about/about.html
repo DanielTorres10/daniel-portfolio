@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
     <title>About</title>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
   </head>
-  <body onload="loadComments()">
+  <body onload="loadComments(); checkIfUserIsLoggedIn();">
     <!-- NAVBAR -->
     <div class ="nav-bar">
       <ul>
@@ -14,6 +14,7 @@
         <li class="nav"><a href="../work/work.html"><div class="nav-text text-box">Work</div></a></li>
         <li class="nav"><a href="../resume/resume.html"><div class="nav-text text-box">Resume</div></a></li>
         <li class="nav"><div class="nav-icon"><img src="images/about.png"  class="icon-img"/></div></li>
+
       </ul>
     </div>
     <!-- NAVBAR END -->
@@ -31,20 +32,25 @@
       
       <div id="center">
         <!-- Comment Section -->
-        <form action="/data" method="POST">
-          <p>Share your thoughts about me:</p>
-          <textarea class="comment-input" name="text-input" id="text-input" required></textarea>
-          <br>
-          <button id="sub" type="submit" onClick='return empty()'>COMMENT</button>
+        <p id="comment-intro">Share your thoughts about me:</p>
+        <form action="/data" method="POST" id="form">
+          <div id="showOnLogin">
+            <textarea class="comment-input" name="text-input" id="text-input"></textarea>
+            <br>
+            <button type="submit" onClick='return empty()'>COMMENT</button>
+          </div>
+          <button id="login" type="button"><a id="reference" href=""></a></button>
         </form>
+      </div>
+      <div id="center">
         <button class="accordion" onclick="displayComments()">Display comments</button>
         <ul id="history"></ul>
-       </div>
-       <div id="center">
+      </div>
+      <div id="center">
         <!-- Social Logos -->
         <a href="https://github.com/DanielTorres10"><img src="images/git2.png"  class="icon-img"/></a>
         <a href="https://linkedin.com/in/daniel-e-torres-945427134"><img src="images/li.png"  class="icon-img"/></a>
-       </div>
+      </div>
     </div>
   </body>
 </html>

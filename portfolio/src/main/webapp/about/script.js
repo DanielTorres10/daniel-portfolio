@@ -12,16 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
+// Comment input
+const input = document.getElementById('text-input');
+// Login/Logout button
+const login = document.getElementById('login');
+const commentHistory = document.getElementById('history');
+
 /* Loading comments from server and displaying them */
 async function loadComments() {
-  const response = await fetch('/data');
+  const response = await fetch('/data'); 
   const comments = await response.json();
-  const commentElement = document.getElementById('history');
+  
   comments.forEach((comment) => {
-    commentElement.appendChild(createCommentElement(comment));
+    commentHistory.appendChild(createCommentElement(comment));
     if (comment.sentiment_score < 0) console.log('Negative comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
     else if(comment.sentiment_score > 0) console.log('Positive comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
     else console.log('Neutral comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
+    console.log('Comment posted by: ' + comment.user);
   })
 }
 
@@ -39,23 +47,39 @@ function createCommentElement(comment) {
 
 
 /* Ignores empty or whitespace comments */
- function empty() {
-  var text;
-  text = document.getElementById("text-input").value.trim();
-  if (text.length === 0) {
+function empty() {
+  if (input.value.trim().length === 0) {
     alert('Unvalid comment.');
     return false;
+  }
+}
+
+async function checkIfUserIsLoggedIn() {
+  const response = await fetch('/home'); 
+  const URL = await response.text();
+  // Only display form is user is logged in
+  const ref = document.getElementById('reference');
+  const form = document.getElementById('showOnLogin');
+  console.log(URL);
+  if (ref.getAttribute("href") === "") ref.href = URL;
+  if (URL.includes("logout")) {
+    ref.innerHTML = "logout";
+    form.style.display = "inline";
+  }
+  else {
+    document.getElementById('comment-intro').innerHTML = 'Login to share your thoughts about me!'  
+    ref.innerHTML = "login";
+    form.style.display = "none";
   }
 }
 
 var clicks = 0;
 function displayComments(){
   clicks +=1;
-  var comment = document.getElementById('history');
-  if (comment.style.display === "none" || clicks == 1) {
-    comment.style.display = "block";
+  if (commentHistory.style.display === "none" || clicks == 1) {
+    commentHistory.style.display = "block";
   } else {
-    comment.style.display = "none";
+    commentHistory.style.display = "none";
   }
 }
 

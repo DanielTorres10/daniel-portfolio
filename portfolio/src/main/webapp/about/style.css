@@ -94,6 +94,7 @@ p {
 }
 #center {
   text-align: center;
+  margin-bottom: 35px;
 }
 /* Resume page container */
 .container {
@@ -153,6 +154,7 @@ p {
 ul {
   list-style: none;
 }
+
 #history {
   display: none;
 }
@@ -175,10 +177,6 @@ button {
   border-radius: 5px;
 }
 
-#sub {
-  margin-bottom: 35px;
-}
-
 .accordion {
   background-color: #1c1c1c;
   cursor: pointer;
@@ -196,5 +194,9 @@ button {
 }
 
 li.nav {
-    display: inline;
+  display: inline;
+}
+
+#showOnLogin {
+    display: none;
 }
