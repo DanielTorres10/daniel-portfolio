@@ -35,27 +35,12 @@ public class HomeServlet extends HttpServlet {
     // Only logged-in users can see the form
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
-      String loginUrl = userService.createLoginURL("/about/about.html");
+      String loginUrl = userService.createLoginURL("/nickname");
       response.getWriter().println(loginUrl);
     }
     else {
       String logoutUrl = userService.createLogoutURL("/about/about.html");
       response.getWriter().println(logoutUrl);
     }
-
-
-  /** Returns the nickname of the user with id, or null if the user has not set a nickname. */
-//   private String getUserNickname(String id) {
-//     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-//     Query query =
-//         new Query("UserInfo")
-//             .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
-//     PreparedQuery results = datastore.prepare(query);
-//     Entity entity = results.asSingleEntity();
-//     if (entity == null) {
-//       return null;
-//     }
-//     String nickname = (String) entity.getProperty("nickname");
-//     return nickname;
    }
 }

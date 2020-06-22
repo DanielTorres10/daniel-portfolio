@@ -26,9 +26,12 @@ async function loadComments() {
   
   comments.forEach((comment) => {
     commentHistory.appendChild(createCommentElement(comment));
-    if (comment.sentiment_score < 0) console.log('Negative comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
-    else if(comment.sentiment_score > 0) console.log('Positive comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
-    else console.log('Neutral comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
+    if (comment.sentiment_score < 0) 
+    console.log('Negative comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
+    else if(comment.sentiment_score > 0) 
+    console.log('Positive comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
+    else 
+    console.log('Neutral comment: '+ comment.text + '\n' +  'Sentimental Score: ' + comment.sentiment_score);
     console.log('Comment posted by: ' + comment.user);
   })
 }

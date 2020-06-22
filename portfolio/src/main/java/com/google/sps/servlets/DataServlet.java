@@ -63,8 +63,8 @@ public class DataServlet extends HttpServlet {
     }
     // Converts to JSON and responds
     response.setContentType("application/json;");
-    String json = convertToJson(comments);
-    response.getWriter().println(json);
+    Gson gson = new Gson();
+    response.getWriter().println(gson.toJson(comments));
   }
 
 
@@ -76,8 +76,9 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
 
     UserService userService = UserServiceFactory.getUserService();
-    String email = userService.getCurrentUser().getEmail();
 
+    String user = getUserNickname(userService.getCurrentUser().getUserId());
+    
     // Create new Entity for Datastore
     Entity comEntity = new Entity("Comment");
     comEntity.setProperty("text-input", text);
@@ -92,7 +93,7 @@ public class DataServlet extends HttpServlet {
     languageService.close();
 
     comEntity.setProperty("sentiment_score", score);
-    comEntity.setProperty("user", email);
+    comEntity.setProperty("user", user);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(comEntity);
@@ -108,10 +109,18 @@ public class DataServlet extends HttpServlet {
     return value.trim();
   }
 
-   /* Method to convert text comments to Json */
-   private String convertToJson(ArrayList<Comment> messages) {
-    Gson gson = new Gson();
-    String json = gson.toJson(messages);
-    return json;
+/* Returns the nickname of the user with id, or null if the user has not set a nickname */
+  private String getUserNickname(String id) {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query =
+      new Query("UserInfo")
+        .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity == null) {
+      return null;
+    }
+    String nickname = (String) entity.getProperty("nickname");
+    return nickname;
   }
 }
