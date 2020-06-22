@@ -40,7 +40,7 @@ public class NicknameServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
       String nickname = getUserNickname(userService.getCurrentUser().getUserId());
-      if (nickname == "") {
+      if (nickname != "") {
         response.sendRedirect("/about/about.html");
       }
       out.println("<p>Set your nickname here:</p>");
