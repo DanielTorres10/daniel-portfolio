@@ -29,6 +29,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import com.google.gson.Gson;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
+
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import java.io.PrintWriter;
 
 /* Servlet that handle comments data */
 @WebServlet("/data")
@@ -36,6 +44,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
     // Get comments from Datastore
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -47,31 +56,50 @@ public class DataServlet extends HttpServlet {
       long id = entity.getKey().getId();
       String text = (String) entity.getProperty("text-input");
       long timestamp = (long) entity.getProperty("timestamp");
+      double score = (double) entity.getProperty("sentiment_score");
+      String user = (String) entity.getProperty("user");
 
-      comments.add(new Comment(id, text, timestamp));
+      comments.add(new Comment(id, text, timestamp, score, user));
     }
     // Converts to JSON and responds
     response.setContentType("application/json;");
-    String json = convertToJsonUsingGson(comments);
-    response.getWriter().println(json);
+    Gson gson = new Gson();
+    response.getWriter().println(gson.toJson(comments));
   }
 
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form in html page.
+
+    // Get the input from the form in html page
     String text = getComment(request, "text-input");
     long timestamp = System.currentTimeMillis();
 
+    UserService userService = UserServiceFactory.getUserService();
+
+    String user = getUserNickname(userService.getCurrentUser().getUserId());
+    
     // Create new Entity for Datastore
     Entity comEntity = new Entity("Comment");
     comEntity.setProperty("text-input", text);
     comEntity.setProperty("timestamp", timestamp);
+  
+    // Sentiment analizer for comments
+    Document doc =
+    Document.newBuilder().setContent(text).setType(Document.Type.PLAIN_TEXT).build();
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    float score = sentiment.getScore();
+    languageService.close();
+
+    comEntity.setProperty("sentiment_score", score);
+    comEntity.setProperty("user", user);
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(comEntity);
-
+    
     // Redirect back to the HTML page.
-    response.sendRedirect("../about/about.html");
+    response.sendRedirect("/about/about.html");
   }
 
 
@@ -81,10 +109,18 @@ public class DataServlet extends HttpServlet {
     return value.trim();
   }
 
-   /* Method to convert to Json */
-   private String convertToJsonUsingGson(ArrayList<Comment> messages) {
-    Gson gson = new Gson();
-    String json = gson.toJson(messages);
-    return json;
+/* Returns the nickname of the user with id, or null if the user has not set a nickname */
+  private String getUserNickname(String id) {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query =
+      new Query("UserInfo")
+        .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity == null) {
+      return null;
+    }
+    String nickname = (String) entity.getProperty("nickname");
+    return nickname;
   }
 }
