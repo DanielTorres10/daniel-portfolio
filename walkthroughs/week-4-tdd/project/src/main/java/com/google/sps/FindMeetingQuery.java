@@ -24,160 +24,143 @@ import java.util.Iterator;
 public final class FindMeetingQuery {
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    // Query conditions 
-    List<TimeRange> noAttendees = optionsForNoAttendees(request);
-    List<TimeRange> eventTooLong = noOptionsForTooLongOfARequest(request);
-    List<TimeRange> eventAvailability = eventSplitsRestriction(events);
+    // Orders events and removes smaller overlapping events
+    events = orderEventsbyStartTimes(events);
     
-    if(events.size()>1) events = orderStartTimes(events);
-    List<TimeRange> attendeeAvailability = everyAttendeeIsConsidered(events, request);
-    
-    // Add conditions here
-    List<List<TimeRange>> conditions = new ArrayList<>();
-    conditions.add(noAttendees);
-    conditions.add(eventTooLong);
-    conditions.add(eventAvailability);
-    conditions.add(attendeeAvailability);
-
-    return verifyAll(conditions);
-  }
-
-  /** Returns the List that's not null */
-  public List<TimeRange> verifyAll(List<List<TimeRange>> conditions) {
-    for(List<TimeRange> list : conditions) {
-      if(list != null) return list;
-    }
-    return null;
+    return everyAttendeeIsConsidered(events, request);
   }
 
   /** Orders Events by start time */
-  public Collection<Event> orderStartTimes (Collection<Event> events) {
+  public Collection<Event> orderEventsbyStartTimes (Collection<Event> events) {
     // TreeMap already sorts by keys. Key-Value: startTime->Events startTimesToEvents
+    if(events.size() == 1) return events;
     TreeMap<Integer, Event> tm = new TreeMap<>();
-    int eventStart = 0;
-    int startOfDay = TimeRange.START_OF_DAY;
     for(Event e : events) {
-      eventStart = e.getWhen().start();
-      tm.put(eventStart,e);
+      tm.put(e.getWhen().start(),e);
     }
-    // Insert ordered Events to new collection
+    // Test cases: nestedEvents()
+    // Insert ordered Events to new collection and ignore smaller overlapping events.
     Collection<Event> orderedEvents = new ArrayList<>();
+    Event e0 = null;
+    Event e1 = null;
+    int smallerStart = 0;
+    int biggerEnd = 0;
+    TimeRange combinedEvents = null;
+    // Used to keep track of two events
+    int i = 0;
     for(Event e: tm.values()) {
-        orderedEvents.add(e);
+        if(i == 0) {
+          e1 = e;
+          orderedEvents.add(e);
+        }
+        else {
+          e0 = e1;
+          e1 = e;
+          if(e1.getWhen().overlaps(e0.getWhen())) {
+              // Checking which starts first and which ends last
+            orderedEvents.remove(e0);
+        	if(e1.getWhen().start() <= e0.getWhen().start()) {
+              smallerStart = e1.getWhen().start();
+        	}
+        	else if (e0.getWhen().start() < e1.getWhen().start()) {
+              smallerStart = e0.getWhen().start();
+        	}
+        	if(e1.getWhen().end() >= e0.getWhen().end()) {
+        	  biggerEnd = e1.getWhen().end();
+         	}
+         	else if (e0.getWhen().end() > e1.getWhen().end()) {
+         	  biggerEnd = e0.getWhen().end();
+         	}
+            combinedEvents = TimeRange.fromStartEnd(smallerStart, biggerEnd, false);
+            orderedEvents.add( new Event("Custom Event",combinedEvents, e0.getAttendees()) );
+          } 
+          // No events overlaps
+          else {
+            orderedEvents.add(e);
+          }
+        }
+
+        i++;
     }
     return orderedEvents;
   }
 
-  /** Condition 1 */
-  public List<TimeRange> optionsForNoAttendees(MeetingRequest request) {
-    if(request.getAttendees().isEmpty()) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);
-    }
-    return null;
-  }
 
- /** Condition 2 */
-  public List<TimeRange> noOptionsForTooLongOfARequest(MeetingRequest request) {
+ /** Returns available times as an arrayList of TimeRanges */
+  
+  public List<TimeRange> everyAttendeeIsConsidered(Collection<Event> events, MeetingRequest request) {
+    // Test case:  noOptionsForTooLongOfARequest()
     if(request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
       return Arrays.asList();
     }
-    return null;
-  }
-
- /** Condition 3: Consider one Event? */
-  public List<TimeRange> eventSplitsRestriction(Collection<Event> events) {
-    if(events.size() == 1) {
-      int firstEventStart = events.iterator().next().getWhen().start();
-      int firstEventEnd = events.iterator().next().getWhen().end();
-      return Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, firstEventStart, false),
-            TimeRange.fromStartEnd(firstEventEnd, TimeRange.END_OF_DAY, true));
+    // Test cases: optionsForNoAttendees(), ignoresPeopleNotAttending(), noConflicts()
+    if(request.getAttendees().isEmpty() || events.size() == 0
+         || peopleNotAttending(events,request)) {
+      return Arrays.asList(TimeRange.WHOLE_DAY);
     }
-    return null;
-  }
-
- /** Condition 4: Assuming the events are in order 
-
-    Case 1:
-     Events  :       |--A--|     |--B--|
-     Day     : |-----------------------------|
-     Options : |--1--|     |--2--|     |--3--|
-      
-    Case 2:
-     Events  :       |--A--||--B--|
-     Day     : |------------------------|
-     Options : |--1--|            |--2--|
-
-    Case 3:
-     Events  : |--A--||--B--|
-     Day     : |------------------------|
-     Options :              |-----1-----|
-
-    Case 4:
-     Events  :             |--A--||--B--|
-     Day     : |------------------------|
-     Options : |-----1-----|
-
-    Case 5:
-     Events  : |--A--|            |--B--|
-     Day     : |------------------------|
-     Options :       |------1-----|
-
-    Case 6:
-     Events  : |--A--|      |--B--|
-     Day     : |------------------------|
-     Options :       |--1---|     |--2--|
-
-    Case 7:
-     Events  :        |--A--|     |--B--|
-     Day     : |------------------------|
-     Options : |---1--|     |--2--|
-
-    */
-  public List<TimeRange> everyAttendeeIsConsidered(Collection<Event> events, MeetingRequest request) {
-    if(events.size() <= 1 || checkOverlappingEvents(events)) return null;
-
-    List<TimeRange> availableTimes = new ArrayList<>();
-    Iterator<Event> eventIterator = events.iterator();
-
+    // List of times to return
+	List<TimeRange> availableTimes = new ArrayList<>();
+	Iterator<Event> eventIterator = events.iterator();
+	TimeRange currEventTime = (TimeRange) eventIterator.next().getWhen();
+	TimeRange runnerEventTime = null;
+	TimeRange freeTime = null;
     int size = events.size();
-    TimeRange currEventTime = (TimeRange) eventIterator.next().getWhen();
-    TimeRange runnerEventTime = null;
 
-    // Before first Event
-    TimeRange freeTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY, currEventTime.start(), false);
-    availableTimes.add(freeTime); 
-    
-    runnerEventTime = currEventTime;
-    currEventTime = (TimeRange) eventIterator.next().getWhen();
-    size--; 
-    
-    while (size != 0) {
-     // In between events
-     if(size != events.size()) {
-        freeTime = TimeRange.fromStartEnd(runnerEventTime.end(), currEventTime.start(), false);
-        availableTimes.add(freeTime); 
-      }
+    // Test cases: everyAttendeeIsConsidered(), justEnoughRoom(), notEnoughRoom(), doubleBookedPeople()
+	// Before first Event
+	if(currEventTime.start() != TimeRange.START_OF_DAY) {
+		
+	  freeTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY, currEventTime.start(), false);
+	    if(doesRequestFitInFreeTime(freeTime.duration(), request.getDuration())) {
+	      availableTimes.add(freeTime); 	
+	    }
+	}
+	if(size != 1) {
+	  runnerEventTime = currEventTime;
+	  currEventTime = (TimeRange) eventIterator.next().getWhen();
+	  size--; 
+    } 
+    // In between events
+	while (size != 0) {
+                                           // Checks for |--A--|--B--|
+	  if( (size != events.size()) && (runnerEventTime.end() != currEventTime.start()) ) {
 
-      runnerEventTime = currEventTime;
-      if(size != 1) currEventTime = (TimeRange) eventIterator.next().getWhen();
-      size--;
-    }
-    // After last Event
-    freeTime = TimeRange.fromStartEnd(runnerEventTime.end(), TimeRange.END_OF_DAY, true);
-    availableTimes.add(freeTime); 
-    return availableTimes;
+	    freeTime = TimeRange.fromStartEnd(runnerEventTime.end(), currEventTime.start(), false);
+	    if(doesRequestFitInFreeTime(freeTime.duration(), request.getDuration())) {
+	      availableTimes.add(freeTime); 	
+	    }
+	  }
+	  runnerEventTime = currEventTime;
+	  // Prevents currEventTime reaching null
+	  if(size != 1) currEventTime = (TimeRange) eventIterator.next().getWhen();
+	  size--;
+	 }
+	
+	// After last Event
+	if(runnerEventTime.end()-1 != TimeRange.END_OF_DAY) {
+		
+	  freeTime = TimeRange.fromStartEnd(runnerEventTime.end(), TimeRange.END_OF_DAY, true);
+	  if(doesRequestFitInFreeTime(freeTime.duration(), request.getDuration())) {
+	    availableTimes.add(freeTime); 	
+	  }
+	}
+	return availableTimes;
+  }
+  
+
+  private boolean peopleNotAttending(Collection<Event> events, MeetingRequest request) {
+	for(String p : request.getAttendees()) {
+		for(Event e : events) {
+		  if(e.getAttendees().contains(p)) return false;	
+		}
+	}
+
+	return true;
   }
 
-  public boolean checkOverlappingEvents(Collection<Event> events) {
-    Iterator<Event> eventIterator = events.iterator();
-    Event currEvent = (Event) eventIterator.next();
-    Event nextEvent = (Event) eventIterator.next();
-    while (eventIterator.hasNext()) {
-      if (currEvent.getWhen().overlaps(nextEvent.getWhen())) return true;
-      currEvent = nextEvent;
-      nextEvent = eventIterator.next();
-    }
-      return false;
+  // Test case: justEnoughRoom(), notEnoughRoom()
+  private boolean doesRequestFitInFreeTime(int freeTime, long requestedTime) {
+	  return freeTime >= requestedTime;
   }
 
 }
